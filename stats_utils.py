@@ -18,7 +18,6 @@ def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
     return swap_statuses
 
-# TODO: implement
 # list (with swaps statuses) -> dict 
 # iterating over the list of swaps and counting data for CMC summary call
 # last_price, base_volume, quote_volume, highest_price_24h, lowest_price_24h, price_change_percent_24h
@@ -35,10 +34,10 @@ def count_volumes_and_prices(swap_statuses):
 
     pair_volumes_and_prices["base_volume"] = base_volume
     pair_volumes_and_prices["quote_volume"] = quote_volume
-    pair_volumes_and_prices["highest_price_24h"] = max(swap_prices.values)
-    pair_volumes_and_prices["lowest_price_24h"] = min(swap_prices.values)
-    pair_volumes_and_prices["last_price"] = swap_prices[max(swap_prices.keys)]
-    pair_volumes_and_prices["price_change_percent_24h"] = ( swap_prices[max(swap_prices.keys)] - swap_prices[min(swap_prices.keys)] ) / Decimal(100)
+    pair_volumes_and_prices["highest_price_24h"] = max(swap_prices.values())
+    pair_volumes_and_prices["lowest_price_24h"] = min(swap_prices.values())
+    pair_volumes_and_prices["last_price"] = swap_prices[max(swap_prices.keys())]
+    pair_volumes_and_prices["price_change_percent_24h"] = ( swap_prices[max(swap_prices.keys())] - swap_prices[min(swap_prices.keys())] ) / Decimal(100)
 
     return pair_volumes_and_prices
 
@@ -82,7 +81,6 @@ def find_highest_bid(orderbook):
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
 def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
-    # TODO: calculate data
     pair_summary = {"traiding_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
                     "base_volume": 0, "quote_volume": 0, "price_change_percent_24h": 0, "highest_price_24h": 0,
                     "lowest_price_24h": 0}
