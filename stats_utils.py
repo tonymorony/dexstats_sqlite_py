@@ -102,4 +102,21 @@ def summary_for_pair(pair, path_to_db):
     pair_summary["highest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["highest_price_24h"])
     pair_summary["lowest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["lowest_price_24h"])
 
+    conn.close()
     return pair_summary
+
+# TICKER Endpoint
+def ticker_for_pair(pair, path_to_db):
+    conn = sqlite3.connect(path_to_db)
+    conn.row_factory = sqlite3.Row
+    sql_coursor = conn.cursor()
+    pair_ticker = OrderedDict()
+    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
+    pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
+    pair_ticker[pair[0] + "_" + pair[1]]["last_price"] = "{:.10f}".format(pair_24h_volumes_and_prices["last_price"])
+    pair_ticker[pair[0] + "_" + pair[1]]["quote_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["quote_volume"])
+    pair_ticker[pair[0] + "_" + pair[1]]["base_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["base_volume"])
+    pair_ticker[pair[0] + "_" + pair[1]]["isFrozen"] = "0"
+    conn.close()
+    return pair_ticker
