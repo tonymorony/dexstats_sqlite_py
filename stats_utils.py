@@ -85,15 +85,15 @@ def summary_for_pair(pair, path_to_db):
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
     pair_summary = OrderedDict()
+    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
+    pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
 
     pair_summary["trading_pair"] = pair[0] + "_" + pair[1]
     pair_summary["last_price"] = "{:.10f}".format(pair_24h_volumes_and_prices["last_price"])
     orderbook = get_mm2_orderbook_for_pair(pair)
     pair_summary["lowest_ask"] = "{:.10f}".format(Decimal(find_lowest_ask(orderbook)))
     pair_summary["highest_bid"] = "{:.10f}".format(Decimal(find_highest_bid(orderbook)))
-    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
-    swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
-    pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
     pair_summary["base_currency"] = pair[0]
     pair_summary["base_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["base_volume"])
     pair_summary["quote_currency"] = pair[1]
