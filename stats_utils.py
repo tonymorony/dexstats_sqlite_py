@@ -81,7 +81,7 @@ def find_highest_bid(orderbook):
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
 def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
-    pair_summary = {"trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
+    pair_summary = {"base_currency": "", "quote_currency": "", trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
                     "base_volume": 0, "quote_volume": 0, "price_change_percent_24h": 0, "highest_price_24h": 0,
                     "lowest_price_24h": 0}
 
@@ -94,6 +94,8 @@ def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
     swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
     pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
 
+    pair_summary["base_currency"] = pair[0]
+    pair_summary["quote_currency"] = pair[1]
     pair_summary["last_price"] = "{:.10f}".format(pair_24h_volumes_and_prices["last_price"])
     pair_summary["base_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["base_volume"])
     pair_summary["quote_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["quote_volume"])
