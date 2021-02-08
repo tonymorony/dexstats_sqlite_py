@@ -12,9 +12,9 @@ def get_availiable_pairs(sql_coursor):
     return available_pairs
 
 # tuple, integer -> list (with swap status dicts)
-# select from DB swap statuses for desired pair with timestamps > than providedß
+# select from DB swap statuses for desired pair with timestamps > than provided
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
-    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > {} AND maker_coin='{}' AND taker_coin='{}';".format(timestamp,pair[0],pair[1]))
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > {} AND maker_coin='{}' AND taker_coin='{}' AND is_success=1;".format(timestamp,pair[0],pair[1]))
     swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
     return swap_statuses
 
@@ -23,7 +23,24 @@ def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
 # iterating over the list of swaps and counting data for CMC summary call
 # last_price, base_volume, quote_volume, highest_price_24h, lowest_price_24h, price_change_percent_24h
 def count_volumes_and_prices(swap_statuses):
-    return {}
+    pair_volumes_and_prices = {}
+    base_volume = 0
+    quote_volume = 0
+    swap_prices = {}
+    for swap_status in swap_statuses:
+        base_volume += swap_status["maker_amount"]
+        quote_volume += swap_status["taker_amount"]
+        swap_price = Decimal(swap_status["taker_amount"]) / Decimal(swap_status["maker_amount"])
+        swap_prices[swap_status["started_at"]] = swap_price
+
+    pair_volumes_and_prices["base_volume"] = base_volume
+    pair_volumes_and_prices["quote_volume"] = quote_volume
+    pair_volumes_and_prices["highest_price_24h"] = max(swap_prices.values)
+    pair_volumes_and_prices["lowest_price_24h"] = min(swap_prices.values)
+    pair_volumes_and_prices["last_price"] = swap_prices[max(swap_prices.keys)]
+    pair_volumes_and_prices["price_change_percent_24h"] = ( swap_prices[max(swap_prices.keys)] - swap_prices[min(swap_prices.keys)] ) / Decimal(100)
+
+    return pair_volumes_and_prices
 
 # tuple, string, string -> list
 # returning orderbook for given trading pair
@@ -75,7 +92,6 @@ def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
     pair_summary["lowest_ask"] = find_lowest_ask(orderbook)
     pair_summary["highest_bid"] = find_highest_bid(orderbook)
 
-    # TODO: functions stubbed atm!!!
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
     swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
     pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
