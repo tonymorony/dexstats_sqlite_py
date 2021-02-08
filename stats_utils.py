@@ -87,8 +87,8 @@ def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
 
     pair_summary["trading_pair"] = pair[0] + "_" + pair[1]
     orderbook = get_mm2_orderbook_for_pair(pair, mm2_rpc_password)
-    pair_summary["lowest_ask"] = "{:.10f}".format(find_lowest_ask(orderbook))
-    pair_summary["highest_bid"] = "{:.10f}".format(find_highest_bid(orderbook))
+    pair_summary["lowest_ask"] = "{:.10f}".format(Decimal(find_lowest_ask(orderbook)))
+    pair_summary["highest_bid"] = "{:.10f}".format(Decimal(find_highest_bid(orderbook)))
 
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
     swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
