@@ -3,7 +3,7 @@ import requests
 import json
 from decimal import Decimal
 from datetime import datetime, timedelta
-
+from collections import OrderedDict 
 
 # getting list of pairs with amount of swaps > 0 from db (list of tuples)
 # sql_coursor -> list (of base, rel tuples)
@@ -84,23 +84,19 @@ def summary_for_pair(pair, path_to_db):
     conn = sqlite3.connect(path_to_db)
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
-    pair_summary = {"base_currency": "", "quote_currency": "", "trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
-                    "base_volume": 0, "quote_volume": 0, "price_change_percent_24h": 0, "highest_price_24h": 0,
-                    "lowest_price_24h": 0}
+    pair_summary = OrderedDict()
 
     pair_summary["trading_pair"] = pair[0] + "_" + pair[1]
+    pair_summary["last_price"] = "{:.10f}".format(pair_24h_volumes_and_prices["last_price"])
     orderbook = get_mm2_orderbook_for_pair(pair)
     pair_summary["lowest_ask"] = "{:.10f}".format(Decimal(find_lowest_ask(orderbook)))
     pair_summary["highest_bid"] = "{:.10f}".format(Decimal(find_highest_bid(orderbook)))
-
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
     swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
     pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
-
     pair_summary["base_currency"] = pair[0]
-    pair_summary["quote_currency"] = pair[1]
-    pair_summary["last_price"] = "{:.10f}".format(pair_24h_volumes_and_prices["last_price"])
     pair_summary["base_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["base_volume"])
+    pair_summary["quote_currency"] = pair[1]
     pair_summary["quote_volume"] = "{:.10f}".format(pair_24h_volumes_and_prices["quote_volume"])
     pair_summary["price_change_percent_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["price_change_percent_24h"])
     pair_summary["highest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["highest_price_24h"])
