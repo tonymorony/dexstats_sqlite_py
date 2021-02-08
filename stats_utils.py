@@ -79,35 +79,19 @@ def find_highest_bid(orderbook):
 
 def get_and_parse_orderbook(pair):
     orderbook = get_mm2_orderbook_for_pair(pair)
-    try:
-        asks = [[float(ask['price']), float(ask['maxvolume'])]
-                for ask
-                in orderbook["asks"]]
-    except (KeyError, ValueError):
-        asks = []
-
-    try:
-        bids = [[float(bid['price']), float(bid['maxvolume'])]
-                for bid
-                in orderbook["bids"]]
-    except (KeyError, ValueError):
-        bids = []
-
-    try:
-        lowest_ask = min([float(ask['price'])
-                            for ask
-                            in orderbook["asks"]])
-    except (KeyError, ValueError):
-        lowest_ask = Decimal(0)
-
-    try:
-        highest_bid = max([float(bid['price'])
-                            for bid
-                            in orderbook["bids"]])
-    except (KeyError, ValueError):
-        highest_bid = Decimal(0)
-
-    return asks, lowest_ask, bids, highest_bid
+    bids_converted_list = []
+    asks_converted_list = []
+    for bid in orderbook["bids"]:
+        converted_bid = []
+        converted_bid.append(bid["price"])
+        converted_bid.append(bid["maxvolume"])
+        bids_converted_list.append(converted_bid)
+    for ask in orderbook["asks"]:
+        converted_ask = []
+        converted_ask.append(ask["price"])
+        converted_ask.append(ask["maxvolume"])
+        asks_converted_list.append(converted_ask)
+    return bids_converted_list, asks_converted_list
 
 # SUMMARY Endpoint
 # tuple, string -> dictionary
@@ -159,6 +143,6 @@ def orderbook_for_pair(pair):
     pair = tuple(map(str, pair.split('_')))
     orderbook_data = OrderedDict()
     orderbook_data["timestamp"] = "{}".format(int(datetime.now().strftime("%s")))
-    orderbook_data["bids"] = get_and_parse_orderbook(pair)[2]
-    orderbook_data["asks"] = get_and_parse_orderbook(pair)[0]
+    orderbook_data["bids"] = get_and_parse_orderbook(pair)[0]
+    orderbook_data["asks"] = get_and_parse_orderbook(pair)[1]
     return orderbook_data
