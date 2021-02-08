@@ -6,10 +6,13 @@ from datetime import datetime, timedelta
 from collections import OrderedDict 
 
 # getting list of pairs with amount of swaps > 0 from db (list of tuples)
-# sql_coursor -> list (of base, rel tuples)
-def get_availiable_pairs(sql_coursor):
+# string -> list (of base, rel tuples)
+def get_availiable_pairs(path_to_db):
+    conn = sqlite3.connect(path_to_db)
+    sql_coursor = conn.cursor()
     sql_coursor.execute("SELECT DISTINCT maker_coin, taker_coin FROM stats_swaps;")
     available_pairs = sql_coursor.fetchall()
+    conn.close()
     return available_pairs
 
 # tuple, integer -> list (with swap status dicts)
