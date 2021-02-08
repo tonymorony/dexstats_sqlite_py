@@ -81,7 +81,7 @@ def find_highest_bid(orderbook):
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
 def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
-    pair_summary = {"base_currency": "", "quote_currency": "", trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
+    pair_summary = {"base_currency": "", "quote_currency": "", "trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
                     "base_volume": 0, "quote_volume": 0, "price_change_percent_24h": 0, "highest_price_24h": 0,
                     "lowest_price_24h": 0}
 
