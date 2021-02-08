@@ -27,5 +27,11 @@ def orderbook(market_pair="KMD_BTC"):
     orderbook_data = orderbook_for_pair(market_pair)
     return flask.jsonify(orderbook_data)
 
+
+@app.route('/api/v1/trades/<market_pair>', methods=['GET'])
+def trades(market_pair="KMD_BTC"):
+    trades_data = ticker_for_pair(market_pair, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
+    return flask.jsonify(trades_data)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

@@ -143,6 +143,28 @@ def orderbook_for_pair(pair):
     pair = tuple(map(str, pair.split('_')))
     orderbook_data = OrderedDict()
     orderbook_data["timestamp"] = "{}".format(int(datetime.now().strftime("%s")))
+    # TODO: maybe it'll be asked on API side? quite tricky to convert strings and sort the
     orderbook_data["bids"] = get_and_parse_orderbook(pair)[0]
     orderbook_data["asks"] = get_and_parse_orderbook(pair)[1]
     return orderbook_data
+
+# Trades Endpoint
+def trades_for_pair(pair, path_to_db):
+    pair = tuple(map(str, pair.split('_')))
+    conn = sqlite3.connect(path_to_db)
+    conn.row_factory = sqlite3.Row
+    sql_coursor = conn.cursor()
+    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
+    trades_info = []
+    for swap_status in swaps_for_pair_24h:
+        trade_info = OrderedDict()
+        trade_info["trade_id"] = swap_status["uuid"]
+        trade_info["price"] = "{:.10f}".format(Decimal(swap_status["taker_amount"]) / Decimal(swap_status["maker_amount"]))
+        trade_info["base_volume"] = swap_status["maker_amount"]
+        trade_info["quote_volume"] = swap_status["taker_amount"]
+        trade_info["timestamp"] = swap_status["started_at"]
+        trade_info["type"] = "buy"
+        trades_info.append(trade_info)
+    conn.close()
+    return trades_info
