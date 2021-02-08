@@ -1,5 +1,6 @@
 import requests
 import json
+from decimal import Decimal
 
 
 # tuple, string, string -> list
@@ -16,13 +17,24 @@ def get_mm2_orderbook_for_pair(pair, mm2_rpc_password):
     return json.loads(r.text)
 
 
-# list -> decimal
+# list -> string
 # returning lowest ask from provided orderbook
 
 def find_lowest_ask(orderbook):
-    return 0
+    lowest_ask = {"price" : "0"}
+    for ask in orderbook["asks"]:
+        if lowest_ask["price"] == "0":
+            lowest_ask = ask
+        elif Decimal(ask["price"]) < Decimal(lowest_ask["price"]):
+            lowest_ask = ask
+    return lowest_ask["price"]
 
 
+# list -> string
 # returning highest bid from provided orderbook
 def find_highest_bid(orderbook):
-    return 0
+    highest_bid = {"price" : "0"}
+    for bid in orderbook["bids"]:
+        if Decimal(bid["price"]) > Decimal(highest_bid["price"]):
+            highest_bid = bid
+    return highest_bid["price"]
