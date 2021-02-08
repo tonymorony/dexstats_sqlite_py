@@ -44,10 +44,9 @@ def count_volumes_and_prices(swap_statuses):
 
 # tuple, string, string -> list
 # returning orderbook for given trading pair
-def get_mm2_orderbook_for_pair(pair, mm2_rpc_password):
+def get_mm2_orderbook_for_pair(pair):
     mm2_host = "http://127.0.0.1:7783"
     params = {
-              'userpass': mm2_rpc_password,
               'method': 'orderbook',
               'base': pair[0],
               'rel': pair[1]
@@ -81,7 +80,7 @@ def find_highest_bid(orderbook):
 # SUMMARY Endpoint
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
-def summary_for_pair(pair, mm2_rpc_password, path_to_db):
+def summary_for_pair(pair, path_to_db):
     conn = sqlite3.connect(path_to_db)
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
@@ -90,7 +89,7 @@ def summary_for_pair(pair, mm2_rpc_password, path_to_db):
                     "lowest_price_24h": 0}
 
     pair_summary["trading_pair"] = pair[0] + "_" + pair[1]
-    orderbook = get_mm2_orderbook_for_pair(pair, mm2_rpc_password)
+    orderbook = get_mm2_orderbook_for_pair(pair)
     pair_summary["lowest_ask"] = "{:.10f}".format(Decimal(find_lowest_ask(orderbook)))
     pair_summary["highest_bid"] = "{:.10f}".format(Decimal(find_highest_bid(orderbook)))
 
