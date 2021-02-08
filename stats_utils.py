@@ -8,14 +8,14 @@ from datetime import datetime, timedelta
 # sql_coursor -> list (of base, rel tuples)
 def get_availiable_pairs(sql_coursor):
     sql_coursor.execute("SELECT DISTINCT maker_coin, taker_coin FROM stats_swaps;")
-    available_pairs = (sql_coursor.fetchall())
+    available_pairs = sql_coursor.fetchall()
     return available_pairs
 
 # tuple, integer -> list (with swap status dicts)
 # select from DB swap statuses for desired pair with timestamps > than providedß
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > {} AND maker_coin='{}' AND taker_coin='{}';".format(timestamp,pair[0],pair[1]))
-    swap_statuses = (sql_coursor.fetchall())
+    swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
     return swap_statuses
 
 # TODO: implement

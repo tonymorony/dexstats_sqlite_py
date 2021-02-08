@@ -5,6 +5,7 @@ from datetime import datetime
 from stats_utils import get_availiable_pairs, summary_for_pair
 
 conn = sqlite3.connect('/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
+conn.row_factory = sqlite3.Row
 rpc_password = "123test"
 
 mycur = conn.cursor()
