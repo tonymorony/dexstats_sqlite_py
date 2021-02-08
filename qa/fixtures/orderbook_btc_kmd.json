@@ -1,0 +1,351 @@
+{
+    "askdepth": 0,
+    "asks": [
+      {
+        "coin": "BTC",
+        "address": "1JsAjr6d21j9T8EMsYnQ6GXf1mM523JAv1",
+        "price": "49137.47528041",
+        "price_rat": [
+          [
+            1,
+            [
+              304941417,
+              1144
+            ]
+          ],
+          [
+            1,
+            [
+              100000000
+            ]
+          ]
+        ],
+        "price_fraction": {
+          "numer": "4913747528041",
+          "denom": "100000000"
+        },
+        "maxvolume": "0.11119575",
+        "max_volume_rat": [
+          [
+            1,
+            [
+              444783
+            ]
+          ],
+          [
+            1,
+            [
+              4000000
+            ]
+          ]
+        ],
+        "max_volume_fraction": {
+          "numer": "444783",
+          "denom": "4000000"
+        },
+        "min_volume": "0.0098106",
+        "min_volume_rat": [
+          [
+            1,
+            [
+              49053
+            ]
+          ],
+          [
+            1,
+            [
+              5000000
+            ]
+          ]
+        ],
+        "min_volume_fraction": {
+          "numer": "49053",
+          "denom": "5000000"
+        },
+        "pubkey": "031bb83b58ec130e28e0a6d5d2acf2eb01b0d3f1670e021d47d31db8a858219da8",
+        "age": 1612784602,
+        "zcredits": 0,
+        "uuid": "d600b282-4f53-4eac-9183-979a5c323b2e",
+        "is_mine": false
+      },
+      {
+        "coin": "BTC",
+        "address": "12fj3npPKwTNxUgDMN8XcCDcR2Z4DBehj6",
+        "price": "48626.15089487",
+        "price_rat": [
+          [
+            1,
+            [
+              712110415,
+              1132
+            ]
+          ],
+          [
+            1,
+            [
+              100000000
+            ]
+          ]
+        ],
+        "price_fraction": {
+          "numer": "4862615089487",
+          "denom": "100000000"
+        },
+        "maxvolume": "0.16755148",
+        "max_volume_rat": [
+          [
+            1,
+            [
+              4188787
+            ]
+          ],
+          [
+            1,
+            [
+              25000000
+            ]
+          ]
+        ],
+        "max_volume_fraction": {
+          "numer": "4188787",
+          "denom": "25000000"
+        },
+        "min_volume": "0.0098046",
+        "min_volume_rat": [
+          [
+            1,
+            [
+              49023
+            ]
+          ],
+          [
+            1,
+            [
+              5000000
+            ]
+          ]
+        ],
+        "min_volume_fraction": {
+          "numer": "49023",
+          "denom": "5000000"
+        },
+        "pubkey": "02dbd8c73e2e80e4f3cf88d2f04a9d2d0df4269496608b14a3e17556fdcb01e0c1",
+        "age": 1612784602,
+        "zcredits": 0,
+        "uuid": "cb9c4229-ffd5-41f3-a22c-52434b9aa74b",
+        "is_mine": false
+      }
+    ],
+    "base": "BTC",
+    "biddepth": 0,
+    "bids": [
+      {
+        "coin": "KMD",
+        "address": "RT9MpMyucqXiX8bZLimXBnrrn2ofmdGNKd",
+        "price": "44543.42984409799554565701559020044543429844097995545657015590200445434298440979955456570155902004454",
+        "price_rat": [
+          [
+            1,
+            [
+              20000000
+            ]
+          ],
+          [
+            1,
+            [
+              449
+            ]
+          ]
+        ],
+        "price_fraction": {
+          "numer": "20000000",
+          "denom": "449"
+        },
+        "maxvolume": "10724.16794283",
+        "max_volume_rat": [
+          [
+            1,
+            [
+              2969937579,
+              249
+            ]
+          ],
+          [
+            1,
+            [
+              100000000
+            ]
+          ]
+        ],
+        "max_volume_fraction": {
+          "numer": "1072416794283",
+          "denom": "100000000"
+        },
+        "min_volume": "458.36647067",
+        "min_volume_rat": [
+          [
+            1,
+            [
+              2886974107,
+              10
+            ]
+          ],
+          [
+            1,
+            [
+              100000000
+            ]
+          ]
+        ],
+        "min_volume_fraction": {
+          "numer": "45836647067",
+          "denom": "100000000"
+        },
+        "pubkey": "031bb83b58ec130e28e0a6d5d2acf2eb01b0d3f1670e021d47d31db8a858219da8",
+        "age": 1612784602,
+        "zcredits": 0,
+        "uuid": "f8c57a9e-3e63-4eca-9543-96f6436782c2",
+        "is_mine": false
+      },
+      {
+        "coin": "KMD",
+        "address": "RK1JDwZ1LvH47Tvqm6pQM7aSqC2Zo6JwRF",
+        "price": "33647.37550471063257065948855989232839838492597577388963660834454912516823687752355316285329744279946",
+        "price_rat": [
+          [
+            1,
+            [
+              25000000
+            ]
+          ],
+          [
+            1,
+            [
+              743
+            ]
+          ]
+        ],
+        "price_fraction": {
+          "numer": "25000000",
+          "denom": "743"
+        },
+        "maxvolume": "190598.07536551",
+        "max_volume_rat": [
+          [
+            1,
+            [
+              3037644199,
+              4437
+            ]
+          ],
+          [
+            1,
+            [
+              100000000
+            ]
+          ]
+        ],
+        "max_volume_fraction": {
+          "numer": "19059807536551",
+          "denom": "100000000"
+        },
+        "min_volume": "0.00777",
+        "min_volume_rat": [
+          [
+            1,
+            [
+              777
+            ]
+          ],
+          [
+            1,
+            [
+              100000
+            ]
+          ]
+        ],
+        "min_volume_fraction": {
+          "numer": "777",
+          "denom": "100000"
+        },
+        "pubkey": "03de96cb66dcfaceaa8b3d4993ce8914cd5fe84e3fd53cefdae45add8032792a12",
+        "age": 1612784602,
+        "zcredits": 0,
+        "uuid": "207aa76e-cdb6-4680-ad66-e52bd29b1283",
+        "is_mine": false
+      },
+      {
+        "coin": "KMD",
+        "address": "RAwv8JhfvmFx2V3QpY7ehiYpBJ1eqxxdxR",
+        "price": "44984.25551057130004498425551057130004498425551057130004498425551057130004498425551057130004498425551",
+        "price_rat": [
+          [
+            1,
+            [
+              100000000
+            ]
+          ],
+          [
+            1,
+            [
+              2223
+            ]
+          ]
+        ],
+        "price_fraction": {
+          "numer": "100000000",
+          "denom": "2223"
+        },
+        "maxvolume": "23021.43879952",
+        "max_volume_rat": [
+          [
+            1,
+            [
+              2150071729,
+              33
+            ]
+          ],
+          [
+            1,
+            [
+              6250000
+            ]
+          ]
+        ],
+        "max_volume_fraction": {
+          "numer": "143883992497",
+          "denom": "6250000"
+        },
+        "min_volume": "458.08614135",
+        "min_volume_rat": [
+          [
+            1,
+            [
+              571788235,
+              2
+            ]
+          ],
+          [
+            1,
+            [
+              20000000
+            ]
+          ]
+        ],
+        "min_volume_fraction": {
+          "numer": "9161722827",
+          "denom": "20000000"
+        },
+        "pubkey": "02dbd8c73e2e80e4f3cf88d2f04a9d2d0df4269496608b14a3e17556fdcb01e0c1",
+        "age": 1612784602,
+        "zcredits": 0,
+        "uuid": "9ba0626c-a7da-4b8b-9d66-86fd3976511d",
+        "is_mine": false
+      }
+    ],
+    "netid": 7777,
+    "numasks": 2,
+    "numbids": 3,
+    "rel": "KMD",
+    "timestamp": 1612784602
+  }
