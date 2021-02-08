@@ -14,5 +14,8 @@ rpc_password = "123test"
 
 @app.route('/api/v1/summary', methods=['GET'])
 def summary():
-    print(summary_for_pair(("RICK", "MORTY"), rpc_password, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'))
-    return flask.jsonify(data)
+    summary_data = summary_for_pair(("RICK", "MORTY"), rpc_password, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
+    return flask.jsonify(summary_data)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
