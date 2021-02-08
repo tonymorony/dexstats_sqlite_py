@@ -171,3 +171,4 @@ def trades_for_pair(pair, path_to_db):
         trades_info.append(trade_info)
     conn.close()
     return trades_info
+    
