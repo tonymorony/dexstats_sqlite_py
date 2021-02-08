@@ -77,6 +77,38 @@ def find_highest_bid(orderbook):
             highest_bid = bid
     return highest_bid["price"]
 
+def get_and_parse_orderbook(pair):
+    orderbook = get_mm2_orderbook_for_pair(pair)
+    try:
+        asks = [[float(ask['price']), float(ask['maxvolume'])]
+                for ask
+                in orderbook["asks"]]
+    except (KeyError, ValueError):
+        asks = []
+
+    try:
+        bids = [[float(bid['price']), float(bid['maxvolume'])]
+                for bid
+                in orderbook["bids"]]
+    except (KeyError, ValueError):
+        bids = []
+
+    try:
+        lowest_ask = min([float(ask['price'])
+                            for ask
+                            in orderbook["asks"]])
+    except (KeyError, ValueError):
+        lowest_ask = Decimal(0)
+
+    try:
+        highest_bid = max([float(bid['price'])
+                            for bid
+                            in orderbook["bids"]])
+    except (KeyError, ValueError):
+        highest_bid = Decimal(0)
+
+    return asks, lowest_ask, bids, highest_bid
+
 # SUMMARY Endpoint
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
@@ -121,3 +153,11 @@ def ticker_for_pair(pair, path_to_db):
     pair_ticker[pair[0] + "_" + pair[1]]["isFrozen"] = "0"
     conn.close()
     return pair_ticker
+
+# Orderbook Endpoint
+def orderbook_for_pair(pair):
+    orderbook_data = OrderedDict()
+    orderbook_data["timestamp"] = "{}".format(int(datetime.now().strftime("%s")))
+    orderbook_data["bids"] = get_and_parse_orderbook(pair)[2]
+    orderbook_data["asks"] = get_and_parse_orderbook(pair)[0]
+    return orderbook_data
