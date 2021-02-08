@@ -1,5 +1,7 @@
 import unittest
-from .. import stats_utils
+import sys
+sys.path.append("..")
+import stats_utils
 
 
 class FindLowestAskTest(unittest.TestCase):
