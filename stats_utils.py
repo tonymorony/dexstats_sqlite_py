@@ -156,6 +156,7 @@ def ticker_for_pair(pair, path_to_db):
 
 # Orderbook Endpoint
 def orderbook_for_pair(pair):
+    pair = tuple(map(str, pair.split('_')))
     orderbook_data = OrderedDict()
     orderbook_data["timestamp"] = "{}".format(int(datetime.now().strftime("%s")))
     orderbook_data["bids"] = get_and_parse_orderbook(pair)[2]
