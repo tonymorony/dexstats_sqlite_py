@@ -1,5 +1,5 @@
 import flask
-from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair
+from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair
 
 app = flask.Flask(__name__)
 
@@ -30,7 +30,7 @@ def orderbook(market_pair="KMD_BTC"):
 
 @app.route('/api/v1/trades/<market_pair>', methods=['GET'])
 def trades(market_pair="KMD_BTC"):
-    trades_data = ticker_for_pair(market_pair, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
+    trades_data = trades_for_pair(market_pair, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
     return flask.jsonify(trades_data)
 
 if __name__ == '__main__':
