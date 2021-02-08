@@ -1,7 +1,5 @@
 import sqlite3
 import flask
-from datetime import timedelta
-from datetime import datetime
 from stats_utils import get_availiable_pairs, summary_for_pair
 
 app = flask.Flask(__name__)
@@ -14,6 +12,7 @@ rpc_password = "123test"
 
 @app.route('/api/v1/summary', methods=['GET'])
 def summary():
+    # TODO: get data for all pairs - have to activate all coins first :)
     summary_data = summary_for_pair(("RICK", "MORTY"), rpc_password, '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db')
     return flask.jsonify(summary_data)
 
