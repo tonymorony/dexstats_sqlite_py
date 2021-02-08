@@ -1,3 +1,4 @@
+import sqlite3
 import requests
 import json
 from decimal import Decimal
@@ -80,7 +81,10 @@ def find_highest_bid(orderbook):
 # SUMMARY Endpoint
 # tuple, string -> dictionary
 # Receiving tuple with base and rel as an argument and producing CMC summary endpoint data, requires mm2 rpc password and sql db connection
-def summary_for_pair(pair, mm2_rpc_password, sql_coursor):
+def summary_for_pair(pair, mm2_rpc_password, path_to_db):
+    conn = sqlite3.connect(path_to_db)
+    conn.row_factory = sqlite3.Row
+    sql_coursor = conn.cursor()
     pair_summary = {"base_currency": "", "quote_currency": "", "trading_pair": "", "last_price": 0, "lowest_ask": 0, "highest_bid": 0,
                     "base_volume": 0, "quote_volume": 0, "price_change_percent_24h": 0, "highest_price_24h": 0,
                     "lowest_price_24h": 0}
