@@ -3,7 +3,7 @@ import requests
 import json
 from decimal import Decimal
 from datetime import datetime, timedelta
-from collections import OrderedDict 
+from collections import OrderedDict
 
 # getting list of pairs with amount of swaps > 0 from db (list of tuples)
 # string -> list (of base, rel tuples)
@@ -18,7 +18,8 @@ def get_availiable_pairs(path_to_db):
 # tuple, integer -> list (with swap status dicts)
 # select from DB swap statuses for desired pair with timestamps > than provided
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
-    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > {} AND maker_coin='{}' AND taker_coin='{}' AND is_success=1;".format(timestamp,pair[0],pair[1]))
+    t = (timestamp,pair[0],pair[1],)
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND maker_coin=? AND taker_coin=?q AND is_success=1;", t)
     swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
     return swap_statuses
 
@@ -171,4 +172,3 @@ def trades_for_pair(pair, path_to_db):
         trades_info.append(trade_info)
     conn.close()
     return trades_info
-    
