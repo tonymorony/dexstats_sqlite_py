@@ -19,7 +19,7 @@ def get_availiable_pairs(path_to_db):
 # select from DB swap statuses for desired pair with timestamps > than provided
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     t = (timestamp,pair[0],pair[1],)
-    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND maker_coin=? AND taker_coin=?q AND is_success=1;", t)
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND maker_coin=? AND taker_coin=? AND is_success=1;", t)
     swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
     return swap_statuses
 
