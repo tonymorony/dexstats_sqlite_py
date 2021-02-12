@@ -76,11 +76,14 @@ def get_mm2_orderbook_for_pair(pair):
 
 def find_lowest_ask(orderbook):
     lowest_ask = {"price" : "0"}
-    for ask in orderbook["asks"]:
-        if lowest_ask["price"] == "0":
-            lowest_ask = ask
-        elif Decimal(ask["price"]) < Decimal(lowest_ask["price"]):
-            lowest_ask = ask
+    try:
+        for ask in orderbook["asks"]:
+            if lowest_ask["price"] == "0":
+                lowest_ask = ask
+            elif Decimal(ask["price"]) < Decimal(lowest_ask["price"]):
+                lowest_ask = ask
+    except KeyError:
+        return 0
     return lowest_ask["price"]
 
 
@@ -88,9 +91,12 @@ def find_lowest_ask(orderbook):
 # returning highest bid from provided orderbook
 def find_highest_bid(orderbook):
     highest_bid = {"price" : "0"}
-    for bid in orderbook["bids"]:
-        if Decimal(bid["price"]) > Decimal(highest_bid["price"]):
-            highest_bid = bid
+    try:
+        for bid in orderbook["bids"]:
+            if Decimal(bid["price"]) > Decimal(highest_bid["price"]):
+                highest_bid = bid
+    except KeyError:
+        return 0
     return highest_bid["price"]
 
 def get_and_parse_orderbook(pair):
