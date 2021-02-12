@@ -39,10 +39,22 @@ def count_volumes_and_prices(swap_statuses):
 
     pair_volumes_and_prices["base_volume"] = base_volume
     pair_volumes_and_prices["quote_volume"] = quote_volume
-    pair_volumes_and_prices["highest_price_24h"] = max(swap_prices.values())
-    pair_volumes_and_prices["lowest_price_24h"] = min(swap_prices.values())
-    pair_volumes_and_prices["last_price"] = swap_prices[max(swap_prices.keys())]
-    pair_volumes_and_prices["price_change_percent_24h"] = ( swap_prices[max(swap_prices.keys())] - swap_prices[min(swap_prices.keys())] ) / Decimal(100)
+    try:
+        pair_volumes_and_prices["highest_price_24h"] = max(swap_prices.values())
+    except ValueError:
+        pair_volumes_and_prices["highest_price_24h"] = 0
+    try:
+        pair_volumes_and_prices["lowest_price_24h"] = min(swap_prices.values())
+    except ValueError:
+        pair_volumes_and_prices["lowest_price_24h"] = 0
+    try:
+        pair_volumes_and_prices["last_price"] = swap_prices[max(swap_prices.keys())]
+    except ValueError:
+        pair_volumes_and_prices["last_price"] = 0
+    try:
+        pair_volumes_and_prices["price_change_percent_24h"] = ( swap_prices[max(swap_prices.keys())] - swap_prices[min(swap_prices.keys())] ) / Decimal(100)
+    except ValueError:
+        pair_volumes_and_prices["price_change_percent_24h"] = 0
 
     return pair_volumes_and_prices
 
