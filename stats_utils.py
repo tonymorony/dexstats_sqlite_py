@@ -190,3 +190,22 @@ def trades_for_pair(pair, path_to_db):
         trades_info.append(trade_info)
     conn.close()
     return trades_info
+
+# Data for atomicdex.io website
+def atomicdex_info(path_to_db):
+    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    timestamp_30d_ago = int((datetime.now() - timedelta(30)).strftime("%s"))
+    conn = sqlite3.connect(path_to_db)
+    sql_coursor = conn.cursor()
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE is_success=1;")
+    swaps_all_time = len(sql_coursor.fetchall())
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND is_success=1;", (timestamp_24h_ago,))
+    swaps_24h = len(sql_coursor.fetchall())
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND is_success=1;", (timestamp_30d_ago,))
+    swaps_30d = len(sql_coursor.fetchall())
+    conn.close()
+    return {
+        "swaps_all_time" : swaps_all_time,
+        "swaps_30d" : swaps_30d,
+        "swaps_24h" : swaps_24h
+    }

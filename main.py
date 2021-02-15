@@ -1,5 +1,5 @@
 import flask
-from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair
+from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
 
 path_to_db = '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'
 app = flask.Flask(__name__)
@@ -33,6 +33,12 @@ def orderbook(market_pair="KMD_BTC"):
 def trades(market_pair="KMD_BTC"):
     trades_data = trades_for_pair(market_pair, path_to_db)
     return flask.jsonify(trades_data)
+
+
+@app.route('/api/v1/atomicdexio', methods=['GET'])
+def atomicdex_info():
+    data = atomicdex_info(path_to_db)
+    return flask.jsonify(data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
