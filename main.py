@@ -36,7 +36,7 @@ def trades(market_pair="KMD_BTC"):
 
 
 @app.route('/api/v1/atomicdexio', methods=['GET'])
-def atomicdex_info():
+def atomicdex_info_api():
     data = atomicdex_info(path_to_db)
     return flask.jsonify(data)
 
