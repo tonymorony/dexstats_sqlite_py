@@ -169,6 +169,8 @@ def ticker_for_pair(pair, path_to_db):
 # Orderbook Endpoint
 def orderbook_for_pair(pair):
     pair = tuple(map(str, pair.split('_')))
+    if len(pair) != 2 or not isinstance(pair[0], str) or not isinstance(pair[0], str):
+        return {"error": "not valid pair"}
     orderbook_data = OrderedDict()
     orderbook_data["timestamp"] = "{}".format(int(datetime.now().strftime("%s")))
     # TODO: maybe it'll be asked on API side? quite tricky to convert strings and sort the
@@ -179,6 +181,8 @@ def orderbook_for_pair(pair):
 # Trades Endpoint
 def trades_for_pair(pair, path_to_db):
     pair = tuple(map(str, pair.split('_')))
+    if len(pair) != 2 or not isinstance(pair[0], str) or not isinstance(pair[0], str):
+        return {"error": "not valid pair"}
     conn = sqlite3.connect(path_to_db)
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
