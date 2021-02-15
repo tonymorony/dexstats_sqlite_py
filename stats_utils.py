@@ -103,16 +103,22 @@ def get_and_parse_orderbook(pair):
     orderbook = get_mm2_orderbook_for_pair(pair)
     bids_converted_list = []
     asks_converted_list = []
-    for bid in orderbook["bids"]:
-        converted_bid = []
-        converted_bid.append(bid["price"])
-        converted_bid.append(bid["maxvolume"])
-        bids_converted_list.append(converted_bid)
-    for ask in orderbook["asks"]:
-        converted_ask = []
-        converted_ask.append(ask["price"])
-        converted_ask.append(ask["maxvolume"])
-        asks_converted_list.append(converted_ask)
+    try:
+        for bid in orderbook["bids"]:
+            converted_bid = []
+            converted_bid.append(bid["price"])
+            converted_bid.append(bid["maxvolume"])
+            bids_converted_list.append(converted_bid)
+    except KeyError:
+        pass
+    try:
+        for ask in orderbook["asks"]:
+            converted_ask = []
+            converted_ask.append(ask["price"])
+            converted_ask.append(ask["maxvolume"])
+            asks_converted_list.append(converted_ask)
+    except KeyError:
+        pass
     return bids_converted_list, asks_converted_list
 
 # SUMMARY Endpoint
