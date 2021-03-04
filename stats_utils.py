@@ -12,18 +12,30 @@ def get_availiable_pairs(path_to_db):
     sql_coursor = conn.cursor()
     sql_coursor.execute("SELECT DISTINCT maker_coin, taker_coin FROM stats_swaps;")
     available_pairs = sql_coursor.fetchall()
+    sorted_available_pairs = []
+    for pair in available_pairs:
+       sorted_available_pairs.append(tuple(sorted(pair)))
     conn.close()
-    return available_pairs
+    # removing duplicates
+    return list(set(sorted_available_pairs))
 
 # tuple, integer -> list (with swap status dicts)
 # select from DB swap statuses for desired pair with timestamps > than provided
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     t = (timestamp,pair[0],pair[1],)
     sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND maker_coin=? AND taker_coin=? AND is_success=1;", t)
-    swap_statuses = [dict(row) for row in sql_coursor.fetchall()]
+    swap_statuses_a_b = [dict(row) for row in sql_coursor.fetchall()]
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND taker_coin=? AND maker_coin=? AND is_success=1;", t)
+    swap_statuses_b_a = [dict(row) for row in sql_coursor.fetchall()]
+    # should be enough to change amounts places = change direction
+    for swap in swap_statuses_b_a:
+        temp_maker_amount = swap["maker_amount"]
+        swap["maker_amount"] = swap["taker_amount"]
+        swap["taker_amount"] = temp_maker_amount
+    swap_statuses = swap_statuses_a_b + swap_statuses_b_a
     return swap_statuses
 
-# list (with swaps statuses) -> dict 
+# list (with swaps statuses) -> dict
 # iterating over the list of swaps and counting data for CMC summary call
 # last_price, base_volume, quote_volume, highest_price_24h, lowest_price_24h, price_change_percent_24h
 def count_volumes_and_prices(swap_statuses):
