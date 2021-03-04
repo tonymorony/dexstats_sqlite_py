@@ -12,8 +12,12 @@ def get_availiable_pairs(path_to_db):
     sql_coursor = conn.cursor()
     sql_coursor.execute("SELECT DISTINCT maker_coin, taker_coin FROM stats_swaps;")
     available_pairs = sql_coursor.fetchall()
+    sorted_available_pairs = []
+    for pair in available_pairs:
+       sorted_available_pairs.append(tuple(sorted(pair)))
     conn.close()
-    return available_pairs
+    # removing duplicates
+    return list(set(sorted_available_pairs))
 
 # tuple, integer -> list (with swap status dicts)
 # select from DB swap statuses for desired pair with timestamps > than provided
