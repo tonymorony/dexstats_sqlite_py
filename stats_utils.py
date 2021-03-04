@@ -25,13 +25,16 @@ def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     t = (timestamp,pair[0],pair[1],)
     sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND maker_coin=? AND taker_coin=? AND is_success=1;", t)
     swap_statuses_a_b = [dict(row) for row in sql_coursor.fetchall()]
+    for swap in swap_statuses_a_b:
+        swap["trade_type"] = "buy"
     sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND taker_coin=? AND maker_coin=? AND is_success=1;", t)
     swap_statuses_b_a = [dict(row) for row in sql_coursor.fetchall()]
-    # should be enough to change amounts places = change direction
+    # should be enough to change amounts place = change direction
     for swap in swap_statuses_b_a:
         temp_maker_amount = swap["maker_amount"]
         swap["maker_amount"] = swap["taker_amount"]
         swap["taker_amount"] = temp_maker_amount
+        swap["trade_type"] = "sell"
     swap_statuses = swap_statuses_a_b + swap_statuses_b_a
     return swap_statuses
 
@@ -208,7 +211,7 @@ def trades_for_pair(pair, path_to_db):
         trade_info["base_volume"] = swap_status["maker_amount"]
         trade_info["quote_volume"] = swap_status["taker_amount"]
         trade_info["timestamp"] = swap_status["started_at"]
-        trade_info["type"] = "buy"
+        trade_info["type"] = swap_status["trade_type"]
         trades_info.append(trade_info)
     conn.close()
     return trades_info
