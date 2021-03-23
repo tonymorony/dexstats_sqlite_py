@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
+from decimal import Decimal
 
 path_to_db = 'MM2.db'
 app = FastAPI()
@@ -42,6 +43,22 @@ def ticker(ticker_ticker="KMD"):
     for pair in available_pairs_ticker:
         if ticker_ticker in pair:
             ticker_data.append(ticker_for_pair(pair, path_to_db))
+    # TODO: move me to utils
+    ticker_data_unified = []
+    for data_sample in ticker_data:
+        base_ticker = data_sample.keys()[0].split("_")[0]
+        rel_ticker = data_sample.keys()[0].split("_")[1]
+        data_sample_unified = {}
+        if base_ticker != ticker_ticker:
+            data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
+                "last_price": "{:.10f}".format(1 / Decimal(data_sample.keys()[0]["last_price"])),
+                "quote_volume": data_sample.keys()[0]["base_volume"],
+                "base_volume": data_sample.keys()[0]["quote_volume"],
+                "isFrozen": "0"
+            }
+            ticker_data_unified.append(data_sample_unified)
+        else:
+            ticker_data_unified.append(data_sample)
     return ticker_data
 
 
