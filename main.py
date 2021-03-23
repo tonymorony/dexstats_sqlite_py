@@ -51,8 +51,11 @@ def ticker(ticker_ticker="KMD"):
         rel_ticker = first_key.split("_")[1]
         data_sample_unified = {}
         if base_ticker != ticker_ticker:
+            last_price_reversed = "{:.10f}".format(Decimal(0))
+            if Decimal(data_sample[first_key]["last_price"]) != 0:
+                last_price_reversed = "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"]))
             data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
-                "last_price": "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"])),
+                "last_price": last_price_reversed,
                 "quote_volume": data_sample[first_key]["base_volume"],
                 "base_volume": data_sample[first_key]["quote_volume"],
                 "isFrozen": "0"
