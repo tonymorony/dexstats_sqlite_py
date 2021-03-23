@@ -47,8 +47,8 @@ def ticker(ticker_ticker="KMD"):
     ticker_data_unified = []
     for data_sample in ticker_data:
         # not adding zero volumes data
+        first_key = list(data_sample.keys())[0]
         if Decimal(data_sample[first_key]["last_price"]) != 0:
-            first_key = list(data_sample.keys())[0]
             base_ticker = first_key.split("_")[0]
             rel_ticker = first_key.split("_")[1]
             data_sample_unified = {}
