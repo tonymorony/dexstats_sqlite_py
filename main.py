@@ -24,7 +24,29 @@ def summary(ticker_summary="KMD"):
     for pair in available_pairs_summary_ticker:
         if ticker_summary in pair:
             summary_data.append(summary_for_pair(pair, path_to_db))
-    return summary_data
+    # TODO: move me to utils function
+    summary_data_modified = []
+    for summary_sample in summary_data:
+        # filtering empty data
+        if Decimal(summary_sample["base_volume"]) != 0 and Decimal(summary_sample["quote_volume"]) != 0:
+            if summary_sample["base_currency"] == ticker_summary:
+                summary_data_modified.append(summary_sample)
+            else:
+                summary_sample_modified = {
+                    "trading_pair": summary_sample["quote_currency"] + "_" + summary_sample["base_currency"],
+                    "last_price": "{:.10f}".format(1 / Decimal(summary_sample["last_price"])),
+                    "lowest_ask": "{:.10f}".format(1 / Decimal(summary_sample["lowest_ask"])),
+                    "highest_bid": "{:.10f}".format(1 / Decimal(summary_sample["highest_bid"])),
+                    "base_currency": summary_sample["quote_currency"],
+                    "base_volume": summary_sample["quote_volume"],
+                    "quote_currency": summary_sample["base_currency"],
+                    "quote_volume": summary_sample["base_volume"],
+                    "price_change_percent_24h": summary_sample["price_change_percent_24h"],
+                    "highest_price_24h": "{:.10f}".format(1 / Decimal(summary_sample["highest_price_24h"])),
+                    "lowest_price_24h": "{:.10f}".format(1 / Decimal(summary_sample["lowest_price_24h"]))
+                }
+                summary_data_modified.append(summary_sample_modified)
+    return summary_data_modified
 
 
 @app.get('/api/v1/ticker')
