@@ -73,6 +73,7 @@ def count_volumes_and_prices(swap_statuses):
 
     return pair_volumes_and_prices
 
+
 # tuple, string, string -> list
 # returning orderbook for given trading pair
 def get_mm2_orderbook_for_pair(pair):
@@ -114,6 +115,7 @@ def find_highest_bid(orderbook):
         return 0
     return highest_bid["price"]
 
+
 def get_and_parse_orderbook(pair):
     orderbook = get_mm2_orderbook_for_pair(pair)
     bids_converted_list = []
@@ -135,6 +137,7 @@ def get_and_parse_orderbook(pair):
     except KeyError:
         pass
     return bids_converted_list, asks_converted_list
+
 
 # SUMMARY Endpoint
 # tuple, string -> dictionary
@@ -164,6 +167,7 @@ def summary_for_pair(pair, path_to_db):
     conn.close()
     return pair_summary
 
+
 # TICKER Endpoint
 def ticker_for_pair(pair, path_to_db):
     conn = sqlite3.connect(path_to_db)
@@ -181,6 +185,7 @@ def ticker_for_pair(pair, path_to_db):
     conn.close()
     return pair_ticker
 
+
 # Orderbook Endpoint
 def orderbook_for_pair(pair):
     pair = tuple(map(str, pair.split('_')))
@@ -193,18 +198,19 @@ def orderbook_for_pair(pair):
     orderbook_data["asks"] = get_and_parse_orderbook(pair)[1]
     return orderbook_data
 
+
 # Trades Endpoint
-def trades_for_pair(pair, path_to_db):
+def trades_for_pair(pair, path_to_db, days_in_past):
     pair = tuple(map(str, pair.split('_')))
     if len(pair) != 2 or not isinstance(pair[0], str) or not isinstance(pair[0], str):
         return {"error": "not valid pair"}
     conn = sqlite3.connect(path_to_db)
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
-    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
-    swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
+    timestamp_since = int((datetime.now() - timedelta(days_in_past)).strftime("%s"))
+    swaps_for_pair_since_timestamp = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_since)
     trades_info = []
-    for swap_status in swaps_for_pair_24h:
+    for swap_status in swaps_for_pair_since_timestamp:
         trade_info = OrderedDict()
         trade_info["trade_id"] = swap_status["uuid"]
         trade_info["price"] = "{:.10f}".format(Decimal(swap_status["taker_amount"]) / Decimal(swap_status["maker_amount"]))

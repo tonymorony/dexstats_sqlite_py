@@ -30,9 +30,9 @@ def orderbook(market_pair="KMD_BTC"):
     return orderbook_data
 
 
-@app.get('/api/v1/trades/{market_pair}')
-def trades(market_pair="KMD_BTC"):
-    trades_data = trades_for_pair(market_pair, path_to_db)
+@app.get('/api/v1/trades/{market_pair}/{days_in_past}')
+def trades(market_pair="KMD_BTC", days_in_past=1):
+    trades_data = trades_for_pair(market_pair, path_to_db, days_in_past)
     return trades_data
 
 
