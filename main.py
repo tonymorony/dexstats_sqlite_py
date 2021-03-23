@@ -42,8 +42,8 @@ def summary(ticker_summary="KMD"):
                     "quote_currency": summary_sample["base_currency"],
                     "quote_volume": summary_sample["base_volume"],
                     "price_change_percent_24h": summary_sample["price_change_percent_24h"],
-                    "highest_price_24h": reverse_string_number(summary_sample["highest_price_24h"]),
-                    "lowest_price_24h": reverse_string_number(summary_sample["lowest_price_24h"])
+                    "highest_price_24h": reverse_string_number(summary_sample["lowest_price_24h"]),
+                    "lowest_price_24h": reverse_string_number(summary_sample["highest_price_24h"])
                 }
                 summary_data_modified.append(summary_sample_modified)
     return summary_data_modified
