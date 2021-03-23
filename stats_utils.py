@@ -222,6 +222,7 @@ def trades_for_pair(pair, path_to_db, days_in_past):
     conn.close()
     return trades_info
 
+
 # Data for atomicdex.io website
 def atomicdex_info(path_to_db):
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))

@@ -32,7 +32,7 @@ def orderbook(market_pair="KMD_BTC"):
 
 @app.get('/api/v1/trades/{market_pair}/{days_in_past}')
 def trades(market_pair="KMD_BTC", days_in_past=1):
-    trades_data = trades_for_pair(market_pair, path_to_db, days_in_past)
+    trades_data = trades_for_pair(market_pair, path_to_db, int(days_in_past))
     return trades_data
 
 
@@ -41,5 +41,6 @@ def atomicdex_info_api():
     data = atomicdex_info(path_to_db)
     return data
 
+
 if __name__ == '__main__':
-    uvicorn.run("main:app")
+    uvicorn.run("main:app", host="0.0.0.0", port=8080)
