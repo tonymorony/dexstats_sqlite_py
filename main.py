@@ -55,7 +55,7 @@ def ticker(ticker_ticker="KMD"):
                 last_price_reversed = "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"]))
             else:
                 last_price_reversed = "{:.10f}".format(Decimal(0))
-            data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
+            data_sample_unified[ticker_ticker + "_" + base_ticker] = {
                 "last_price": last_price_reversed,
                 "quote_volume": data_sample[first_key]["base_volume"],
                 "base_volume": data_sample[first_key]["quote_volume"],
