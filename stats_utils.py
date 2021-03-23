@@ -19,6 +19,7 @@ def get_availiable_pairs(path_to_db):
     # removing duplicates
     return list(set(sorted_available_pairs))
 
+
 # tuple, integer -> list (with swap status dicts)
 # select from DB swap statuses for desired pair with timestamps > than provided
 def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
@@ -37,6 +38,7 @@ def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
         swap["trade_type"] = "sell"
     swap_statuses = swap_statuses_a_b + swap_statuses_b_a
     return swap_statuses
+
 
 # list (with swaps statuses) -> dict
 # iterating over the list of swaps and counting data for CMC summary call
@@ -241,3 +243,10 @@ def atomicdex_info(path_to_db):
         "swaps_30d" : swaps_30d,
         "swaps_24h" : swaps_24h
     }
+
+
+def reverse_string_number(string_number):
+    if Decimal(string_number) != 0:
+        return "{:.10f}".format(1 / Decimal(string_number))
+    else:
+        return string_number
