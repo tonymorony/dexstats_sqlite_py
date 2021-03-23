@@ -6,21 +6,42 @@ path_to_db = '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'
 app = FastAPI()
 available_pairs = get_availiable_pairs(path_to_db)
 
+
 @app.get('/api/v1/summary')
 def summary():
-    available_pairs = get_availiable_pairs(path_to_db)
+    available_pairs_summary = get_availiable_pairs(path_to_db)
     summary_data = []
-    for pair in available_pairs:
+    for pair in available_pairs_summary:
         summary_data.append(summary_for_pair(pair, path_to_db))
+    return summary_data
+
+
+@app.get('/api/v1/summary_for_ticker/{ticker_summary}')
+def summary(ticker_summary="KMD"):
+    available_pairs_summary_ticker = get_availiable_pairs(path_to_db)
+    summary_data = []
+    for pair in available_pairs_summary_ticker:
+        if ticker_summary in pair:
+            summary_data.append(summary_for_pair(pair, path_to_db))
     return summary_data
 
 
 @app.get('/api/v1/ticker')
 def ticker():
-    available_pairs = get_availiable_pairs(path_to_db)
+    available_pairs_ticker = get_availiable_pairs(path_to_db)
     ticker_data = []
-    for pair in available_pairs:
+    for pair in available_pairs_ticker:
         ticker_data.append(ticker_for_pair(pair, path_to_db))
+    return ticker_data
+
+
+@app.get('/api/v1/ticker_for_ticker/{ticker_ticker}')
+def ticker(ticker_ticker="KMD"):
+    available_pairs_ticker = get_availiable_pairs(path_to_db)
+    ticker_data = []
+    for pair in available_pairs_ticker:
+        if ticker_ticker in pair:
+            ticker_data.append(ticker_for_pair(pair, path_to_db))
     return ticker_data
 
 
