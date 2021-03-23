@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
 
-path_to_db = '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'
+path_to_db = 'MM2.db'
 app = FastAPI()
 available_pairs = get_availiable_pairs(path_to_db)
 
