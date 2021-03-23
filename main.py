@@ -51,9 +51,10 @@ def ticker(ticker_ticker="KMD"):
         rel_ticker = first_key.split("_")[1]
         data_sample_unified = {}
         if base_ticker != ticker_ticker:
-            last_price_reversed = "{:.10f}".format(Decimal(0))
             if Decimal(data_sample[first_key]["last_price"]) != 0:
                 last_price_reversed = "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"]))
+            else:
+                last_price_reversed = "{:.10f}".format(Decimal(0))
             data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
                 "last_price": last_price_reversed,
                 "quote_volume": data_sample[first_key]["base_volume"],
@@ -63,7 +64,7 @@ def ticker(ticker_ticker="KMD"):
             ticker_data_unified.append(data_sample_unified)
         else:
             ticker_data_unified.append(data_sample)
-    return ticker_data
+    return ticker_data_unified
 
 
 @app.get('/api/v1/orderbook/{market_pair}')
