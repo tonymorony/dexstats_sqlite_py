@@ -43,27 +43,26 @@ def ticker(ticker_ticker="KMD"):
     for pair in available_pairs_ticker:
         if ticker_ticker in pair:
             ticker_data.append(ticker_for_pair(pair, path_to_db))
-    # TODO: move me to utils
+    # TODO: move me to utils function
     ticker_data_unified = []
     for data_sample in ticker_data:
-        first_key = list(data_sample.keys())[0]
-        base_ticker = first_key.split("_")[0]
-        rel_ticker = first_key.split("_")[1]
-        data_sample_unified = {}
-        if base_ticker != ticker_ticker:
-            if Decimal(data_sample[first_key]["last_price"]) != 0:
+        # not adding zero volumes data
+        if Decimal(data_sample[first_key]["last_price"]) != 0:
+            first_key = list(data_sample.keys())[0]
+            base_ticker = first_key.split("_")[0]
+            rel_ticker = first_key.split("_")[1]
+            data_sample_unified = {}
+            if base_ticker != ticker_ticker:
                 last_price_reversed = "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"]))
+                data_sample_unified[ticker_ticker + "_" + base_ticker] = {
+                    "last_price": last_price_reversed,
+                    "quote_volume": data_sample[first_key]["base_volume"],
+                    "base_volume": data_sample[first_key]["quote_volume"],
+                    "isFrozen": "0"
+                }
+                ticker_data_unified.append(data_sample_unified)
             else:
-                last_price_reversed = "{:.10f}".format(Decimal(0))
-            data_sample_unified[ticker_ticker + "_" + base_ticker] = {
-                "last_price": last_price_reversed,
-                "quote_volume": data_sample[first_key]["base_volume"],
-                "base_volume": data_sample[first_key]["quote_volume"],
-                "isFrozen": "0"
-            }
-            ticker_data_unified.append(data_sample_unified)
-        else:
-            ticker_data_unified.append(data_sample)
+                ticker_data_unified.append(data_sample)
     return ticker_data_unified
 
 
