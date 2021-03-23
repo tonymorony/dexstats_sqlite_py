@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
+from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info, reverse_string_number
 from decimal import Decimal
 
 path_to_db = 'MM2.db'
@@ -34,16 +34,16 @@ def summary(ticker_summary="KMD"):
             else:
                 summary_sample_modified = {
                     "trading_pair": summary_sample["quote_currency"] + "_" + summary_sample["base_currency"],
-                    "last_price": "{:.10f}".format(1 / Decimal(summary_sample["last_price"])),
-                    "lowest_ask": "{:.10f}".format(1 / Decimal(summary_sample["lowest_ask"])),
-                    "highest_bid": "{:.10f}".format(1 / Decimal(summary_sample["highest_bid"])),
+                    "last_price": reverse_string_number(summary_sample["last_price"]),
+                    "lowest_ask": reverse_string_number(summary_sample["lowest_ask"]),
+                    "highest_bid": reverse_string_number(summary_sample["highest_bid"]),
                     "base_currency": summary_sample["quote_currency"],
                     "base_volume": summary_sample["quote_volume"],
                     "quote_currency": summary_sample["base_currency"],
                     "quote_volume": summary_sample["base_volume"],
                     "price_change_percent_24h": summary_sample["price_change_percent_24h"],
-                    "highest_price_24h": "{:.10f}".format(1 / Decimal(summary_sample["highest_price_24h"])),
-                    "lowest_price_24h": "{:.10f}".format(1 / Decimal(summary_sample["lowest_price_24h"]))
+                    "highest_price_24h": reverse_string_number(summary_sample["highest_price_24h"]),
+                    "lowest_price_24h": reverse_string_number(summary_sample["lowest_price_24h"])
                 }
                 summary_data_modified.append(summary_sample_modified)
     return summary_data_modified
@@ -75,7 +75,7 @@ def ticker(ticker_ticker="KMD"):
             rel_ticker = first_key.split("_")[1]
             data_sample_unified = {}
             if base_ticker != ticker_ticker:
-                last_price_reversed = "{:.10f}".format(1 / Decimal(data_sample[first_key]["last_price"]))
+                last_price_reversed = reverse_string_number(data_sample[first_key]["last_price"])
                 data_sample_unified[ticker_ticker + "_" + base_ticker] = {
                     "last_price": last_price_reversed,
                     "quote_volume": data_sample[first_key]["base_volume"],
