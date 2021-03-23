@@ -47,8 +47,8 @@ def ticker(ticker_ticker="KMD"):
     ticker_data_unified = []
     for data_sample in ticker_data:
         first_key = list(data_sample.keys())[0]
-        base_ticker = data_sample[first_key].split("_")[0]
-        rel_ticker = data_sample[first_key].split("_")[1]
+        base_ticker = first_key.split("_")[0]
+        rel_ticker = first_key.split("_")[1]
         data_sample_unified = {}
         if base_ticker != ticker_ticker:
             data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
