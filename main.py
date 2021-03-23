@@ -46,14 +46,14 @@ def ticker(ticker_ticker="KMD"):
     # TODO: move me to utils
     ticker_data_unified = []
     for data_sample in ticker_data:
-        base_ticker = data_sample.keys()[0].split("_")[0]
-        rel_ticker = data_sample.keys()[0].split("_")[1]
+        base_ticker = list(data_sample.keys())[0].split("_")[0]
+        rel_ticker = list(data_sample.keys())[0].split("_")[1]
         data_sample_unified = {}
         if base_ticker != ticker_ticker:
             data_sample_unified[ticker_ticker + "_" + rel_ticker] = {
-                "last_price": "{:.10f}".format(1 / Decimal(data_sample.keys()[0]["last_price"])),
-                "quote_volume": data_sample.keys()[0]["base_volume"],
-                "base_volume": data_sample.keys()[0]["quote_volume"],
+                "last_price": "{:.10f}".format(1 / Decimal(list(data_sample.keys())[0]["last_price"])),
+                "quote_volume": list(data_sample.keys())[0]["base_volume"],
+                "base_volume": list(data_sample.keys())[0]["quote_volume"],
                 "isFrozen": "0"
             }
             ticker_data_unified.append(data_sample_unified)
