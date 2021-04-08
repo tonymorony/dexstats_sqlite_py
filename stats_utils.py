@@ -257,7 +257,9 @@ def get_data_from_gecko():
     with open("0.4.0-coins.json", "r") as coins_json:
         json_data = json.load(coins_json)
         for coin in json_data:
-            coin_ids_list.append(coin["coingecko_id"])
+            if "coingecko_id" in json_data[coin].keys():
+                coin_ids_list.append(json_data[coin]["coingecko_id"])
+    print(coin_ids_list)
     coin_ids = ""
     for coin_id in coin_ids_list:
         coin_ids += coin_id
