@@ -255,7 +255,8 @@ def reverse_string_number(string_number):
 def get_data_from_gecko():
     coin_ids_list = []
     with open("0.4.0-coins.json", "r") as coins_json:
-        for coin in coins_json:
+        json_data = json.load(coins_json)
+        for coin in json_data:
             coin_ids_list.append(coin["coingecko_id"])
     coin_ids = ""
     for coin_id in coin_ids_list:
