@@ -346,3 +346,11 @@ def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
             else:
                 ticker_data_unified.append(data_sample)
     return ticker_data_unified
+
+
+def volume_for_ticker(ticker, path_to_db, days):
+    ticker_data = ticker_for_ticker(ticker, path_to_db, 1)
+    overall_volume = 0
+    for pair in ticker_data:
+        overall_volume += pair["base_volume"]
+    return overall_volume
