@@ -129,5 +129,12 @@ def atomicdex_info_api():
     return data
 
 
+@app.get('/api/v1/fiat_rates')
+def fiat_rates():
+    with open('gecko_cache.json', 'r') as json_file:
+        gecko_cached_data = json.load(json_file)
+    return gecko_cached_data
+
+
 if __name__ == '__main__':
     uvicorn.run("main:app", host="0.0.0.0", port=8080)
