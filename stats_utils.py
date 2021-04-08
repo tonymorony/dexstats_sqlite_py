@@ -253,15 +253,15 @@ def reverse_string_number(string_number):
 
 
 def get_data_from_gecko():
-    coin_ids_list = []
+    coin_ids_dict = {}
     with open("0.4.0-coins.json", "r") as coins_json:
         json_data = json.load(coins_json)
         for coin in json_data:
             if "coingecko_id" in json_data[coin].keys():
-                coin_ids_list.append(json_data[coin]["coingecko_id"])
-    print(coin_ids_list)
+                coin_ids_dict[coin]["coingecko_id"] = (json_data[coin]["coingecko_id"])
+    print(coin_ids_dict)
     coin_ids = ""
-    for coin_id in coin_ids_list:
+    for coin_id in coin_ids_dict[coin]["coingecko_id"]:
         coin_ids += coin_id
         coin_ids += ","
     r = ""
@@ -269,4 +269,7 @@ def get_data_from_gecko():
         r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids=' + coin_ids + '&vs_currencies=usd')
     except Exception as e:
         return {"error": "https://api.coingecko.com/api/v3/simple/price?ids= is not available"}
-    return r.json()
+    gecko_data = r.json()
+    for coingecko_id in coin_ids_dict[coin]["coingecko_id"]:
+        coin_ids_dict[coin]["usd_price"] = gecko_data[coingecko_id]["usd"]
+    return coin_ids_dict
