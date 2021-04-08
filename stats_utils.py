@@ -352,5 +352,5 @@ def volume_for_ticker(ticker, path_to_db, days):
     ticker_data = ticker_for_ticker(ticker, path_to_db, 1)
     overall_volume = 0
     for pair in ticker_data:
-        overall_volume += pair["base_volume"]
+        overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
     return overall_volume
