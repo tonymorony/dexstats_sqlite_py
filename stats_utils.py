@@ -302,7 +302,6 @@ def get_data_from_gecko():
             else:
                 coin_ids_dict[coin]["usd_price"] = 0
     except Exception as e:
-        print(coingecko_id)
         print(e)
         pass
     return coin_ids_dict
@@ -366,9 +365,12 @@ def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
     return ticker_data_unified
 
 
-def volume_for_ticker(ticker, path_to_db, days):
-    ticker_data = ticker_for_ticker(ticker, path_to_db, 1)
-    overall_volume = 0
-    for pair in ticker_data:
-        overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
+def volume_for_ticker(ticker, path_to_db, days_in_past):
+    overall_volume = {}
+    for x in range(0, days_in_past):
+        ticker_data = ticker_for_ticker(ticker, path_to_db, days_in_past)
+        x_days_volume = 0
+        for pair in ticker_data:
+            x_days_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
+        overall_volume[x] = x_days_volume
     return overall_volume
