@@ -250,3 +250,20 @@ def reverse_string_number(string_number):
         return "{:.10f}".format(1 / Decimal(string_number))
     else:
         return string_number
+
+
+def get_data_from_gecko():
+    coin_ids_list = []
+    with open("0.4.0-coins.json", "r") as coins_json:
+        for coin in coins_json:
+            coin_ids_list.append(coin["coingecko_id"])
+    coin_ids = ""
+    for coin_id in coin_ids_list:
+        coin_ids += coin_id
+        coin_ids += ","
+    r = ""
+    try:
+        r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids=' + coin_ids + '&vs_currencies=usd')
+    except Exception as e:
+        return {"error": "https://api.coingecko.com/api/v3/simple/price?ids= is not available"}
+    return r.json()
