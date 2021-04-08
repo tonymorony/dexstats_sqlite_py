@@ -257,19 +257,35 @@ def get_data_from_gecko():
     with open("0.4.0-coins.json", "r") as coins_json:
         json_data = json.load(coins_json)
         for coin in json_data:
-            if "coingecko_id" in json_data[coin].keys():
-                coin_ids_dict[coin]["coingecko_id"] = (json_data[coin]["coingecko_id"])
-    print(coin_ids_dict)
+            try:
+                coin_ids_dict[coin] = {}
+                coin_ids_dict[coin]["coingecko_id"] = json_data[coin]["coingecko_id"]
+            except KeyError as e:
+                 print(e)
+                 coin_ids_dict[coin]["coingecko_id"] = "na"
     coin_ids = ""
-    for coin_id in coin_ids_dict[coin]["coingecko_id"]:
-        coin_ids += coin_id
-        coin_ids += ","
+    for coin in coin_ids_dict:
+        coin_id = coin_ids_dict[coin]["coingecko_id"]
+        if coin_id != "na" and coin_id != "test-coin":
+            coin_ids += coin_id
+            coin_ids += ","
     r = ""
     try:
         r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids=' + coin_ids + '&vs_currencies=usd')
     except Exception as e:
         return {"error": "https://api.coingecko.com/api/v3/simple/price?ids= is not available"}
     gecko_data = r.json()
-    for coingecko_id in coin_ids_dict[coin]["coingecko_id"]:
-        coin_ids_dict[coin]["usd_price"] = gecko_data[coingecko_id]["usd"]
+    try:
+        for coin in coin_ids_dict:
+            coin_id = coin_ids_dict[coin]["coingecko_id"]
+            print(coin_id)
+            if coin_id != "na" and coin_id != "test-coin":
+                coin_ids_dict[coin]["usd_price"] = gecko_data[coin_id]["usd"]
+            else:
+                coin_ids_dict[coin]["usd_price"] = 0
+    except Exception as e:
+        print(coingecko_id)
+        print(e)
+        pass
     return coin_ids_dict
+
