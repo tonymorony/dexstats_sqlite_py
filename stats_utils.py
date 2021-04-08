@@ -171,12 +171,12 @@ def summary_for_pair(pair, path_to_db):
 
 
 # TICKER Endpoint
-def ticker_for_pair(pair, path_to_db):
+def ticker_for_pair(pair, path_to_db, days_in_past=1):
     conn = sqlite3.connect(path_to_db)
     conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
     pair_ticker = OrderedDict()
-    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    timestamp_24h_ago = int((datetime.now() - timedelta(days_in_past)).strftime("%s"))
     swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
     pair_24h_volumes_and_prices = count_volumes_and_prices(swaps_for_pair_24h)
     pair_ticker[pair[0] + "_" + pair[1]] = OrderedDict()
@@ -320,12 +320,12 @@ def summary_for_ticker(ticker_summary, path_to_db):
     return summary_data_modified
 
 
-def ticker_for_ticker(ticker_ticker, path_to_db):
+def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
     available_pairs_ticker = get_availiable_pairs(path_to_db)
     ticker_data = []
     for pair in available_pairs_ticker:
         if ticker_ticker in pair:
-            ticker_data.append(ticker_for_pair(pair, path_to_db))
+            ticker_data.append(ticker_for_pair(pair, path_to_db, days_in_past))
     ticker_data_unified = []
     for data_sample in ticker_data:
         # not adding zero volumes data

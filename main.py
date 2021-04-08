@@ -50,13 +50,13 @@ def ticker():
     available_pairs_ticker = get_availiable_pairs(path_to_db)
     ticker_data = []
     for pair in available_pairs_ticker:
-        ticker_data.append(ticker_for_pair(pair, path_to_db))
+        ticker_data.append(ticker_for_pair(pair, path_to_db, 1))
     return ticker_data
 
 
 @app.get('/api/v1/ticker_for_ticker/{ticker_ticker}')
 def ticker(ticker_ticker="KMD"):
-    return ticker_for_ticker(ticker_ticker, path_to_db)
+    return ticker_for_ticker(ticker_ticker, path_to_db, 1)
 
 
 @app.get('/api/v1/orderbook/{market_pair}')
@@ -82,6 +82,18 @@ def fiat_rates():
     with open('gecko_cache.json', 'r') as json_file:
         gecko_cached_data = json.load(json_file)
     return gecko_cached_data
+
+
+# TODO: get volumes for x days for ticker
+@app.get("api/v1/volumes/{ticker}/{days_in_past}")
+def volumes_history_ticker():
+    return ""
+
+
+# TODO: get volumes for x days for pair
+@app.get("api/v1/volumes/{pair}/{days_in_past}")
+def volumes_history_ticker():
+    return ""
 
 
 if __name__ == '__main__':
