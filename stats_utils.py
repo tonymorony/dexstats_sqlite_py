@@ -40,6 +40,24 @@ def get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp):
     return swap_statuses
 
 
+def get_swaps_between_timestamps_for_pair(sql_coursor, pair, timestamp_a, timestamp_b):
+    t = (timestamp_a,timestamp_b,pair[0],pair[1],)
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND started_at < ? AND maker_coin=? AND taker_coin=? AND is_success=1;", t)
+    swap_statuses_a_b = [dict(row) for row in sql_coursor.fetchall()]
+    for swap in swap_statuses_a_b:
+        swap["trade_type"] = "buy"
+    sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND started_at < ? AND taker_coin=? AND maker_coin=? AND is_success=1;", t)
+    swap_statuses_b_a = [dict(row) for row in sql_coursor.fetchall()]
+    # should be enough to change amounts place = change direction
+    for swap in swap_statuses_b_a:
+        temp_maker_amount = swap["maker_amount"]
+        swap["maker_amount"] = swap["taker_amount"]
+        swap["taker_amount"] = temp_maker_amount
+        swap["trade_type"] = "sell"
+    swap_statuses = swap_statuses_a_b + swap_statuses_b_a
+    return swap_statuses
+
+
 # list (with swaps statuses) -> dict
 # iterating over the list of swaps and counting data for CMC summary call
 # last_price, base_volume, quote_volume, highest_price_24h, lowest_price_24h, price_change_percent_24h
