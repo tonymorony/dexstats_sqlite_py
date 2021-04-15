@@ -367,11 +367,14 @@ def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
 
 def volume_for_ticker(ticker, path_to_db, days_in_past):
     volumes_dict = {}
+    previous_volume = 0
     for i in range(0, days_in_past):
+        overall_volume = 0
         ticker_data = ticker_for_ticker(ticker, path_to_db, days_in_past)
         d = (datetime.today() - timedelta(days=i)).strftime('%Y-%m-%d')
         volumes_dict[d] = 0
-        #overall_volume = 0
-        #for pair in ticker_data:
-        #    overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
+        for pair in ticker_data:
+            overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
+        volumes_dict[d] = overall_volume - previous_volume
+        previous_volume = overall_volume
     return volumes_dict
