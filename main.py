@@ -87,7 +87,7 @@ def fiat_rates():
 # TODO: get volumes for x days for ticker
 @app.get("/api/v1/volumes_ticker/{ticker_vol}/{days_in_past}")
 def volumes_history_ticker(ticker_vol="KMD", days_in_past=1):
-    return volume_for_ticker(ticker_vol, path_to_db, days_in_past)
+    return volume_for_ticker(ticker_vol, path_to_db, int(days_in_past))
 
 
 if __name__ == '__main__':
