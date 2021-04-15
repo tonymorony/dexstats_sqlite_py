@@ -365,9 +365,13 @@ def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
     return ticker_data_unified
 
 
-def volume_for_ticker(ticker, path_to_db):
-    ticker_data = ticker_for_ticker(ticker, path_to_db, 1)
-    overall_volume = 0
-    for pair in ticker_data:
-        overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
-    return overall_volume
+def volume_for_ticker(ticker, path_to_db, days_in_past):
+    volumes_dict = {}
+    for i in range(0, days_in_past):
+        ticker_data = ticker_for_ticker(ticker, path_to_db, days_in_past)
+        d = datetime.today() - timedelta(days=i)
+        volumes_dict[d] = 0
+        #overall_volume = 0
+        #for pair in ticker_data:
+        #    overall_volume += Decimal(pair[list(pair.keys())[0]]["base_volume"])
+    return volumes_dict
