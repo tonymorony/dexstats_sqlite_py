@@ -1,9 +1,19 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
 
 path_to_db = '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 available_pairs = get_availiable_pairs(path_to_db)
 
 @app.get('/api/v1/summary')
@@ -42,4 +52,4 @@ def atomicdex_info_api():
     return data
 
 if __name__ == '__main__':
-    uvicorn.run("main:app")
+    uvicorn.run("main:app", host="0.0.0.0", port=8080)
