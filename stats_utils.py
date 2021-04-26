@@ -122,7 +122,7 @@ def get_and_parse_orderbook(pair):
         for bid in orderbook["bids"]:
             converted_bid = []
             converted_bid.append(bid["price"])
-            converted_bid.append(bid["maxvolume"])
+            converted_bid.append(bid["base_max_volume"])
             bids_converted_list.append(converted_bid)
     except KeyError:
         pass
@@ -130,7 +130,7 @@ def get_and_parse_orderbook(pair):
         for ask in orderbook["asks"]:
             converted_ask = []
             converted_ask.append(ask["price"])
-            converted_ask.append(ask["maxvolume"])
+            converted_ask.append(ask["base_max_volume"])
             asks_converted_list.append(converted_ask)
     except KeyError:
         pass
