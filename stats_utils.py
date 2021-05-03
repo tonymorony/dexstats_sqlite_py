@@ -365,6 +365,15 @@ def ticker_for_ticker(ticker_ticker, path_to_db, days_in_past=1):
     return ticker_data_unified
 
 
+def swaps24h_for_ticker(ticker, path_to_db, days_in_past=1):
+    available_pairs_ticker = get_availiable_pairs(path_to_db)
+    ticker_data = []
+    for pair in available_pairs_ticker:
+        if ticker in pair:
+            ticker_data.append(ticker_for_pair(pair, path_to_db, days_in_past))
+    return {"swaps_amount_24h": len(ticker_data)}
+
+
 def volume_for_ticker(ticker, path_to_db, days_in_past):
     volumes_dict = {}
     previous_volume = 0
