@@ -4,7 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_utils.tasks import repeat_every
 from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair,\
-    atomicdex_info, reverse_string_number, get_data_from_gecko, summary_for_ticker, ticker_for_ticker, volume_for_ticker
+    atomicdex_info, reverse_string_number, get_data_from_gecko, summary_for_ticker, ticker_for_ticker, volume_for_ticker,\
+    swaps24h_for_ticker
 from decimal import Decimal
 
 path_to_db = 'MM2.db'
@@ -57,6 +58,11 @@ def ticker():
 @app.get('/api/v1/ticker_for_ticker/{ticker_ticker}')
 def ticker(ticker_ticker="KMD"):
     return ticker_for_ticker(ticker_ticker, path_to_db, 1)
+
+
+@app.get('/api/v1/swaps24/{ticker}')
+def ticker(ticker="KMD"):
+    return swaps24h_for_ticker(ticker, path_to_db, 1)
 
 
 @app.get('/api/v1/orderbook/{market_pair}')
