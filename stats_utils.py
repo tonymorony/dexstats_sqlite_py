@@ -404,9 +404,15 @@ def summary_ticker(path_to_db):
     for pair in available_pairs:
         swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
         for swap in swaps_for_pair_24h:
-            tickers_summary[swap["maker_coin"]]["volume_24h"] += swap["maker_amount"]
-            tickers_summary[swap["maker_coin"]]["trades_24h"] += 1
-            tickers_summary[swap["taker_coin"]]["volume_24h"] += swap["taker_amount"]
-            tickers_summary[swap["taker_coin"]]["trades_24h"] += 1
+            if swap["trade_type"] == "buy":
+                tickers_summary[swap["maker_coin"]]["volume_24h"] += swap["maker_amount"]
+                tickers_summary[swap["maker_coin"]]["trades_24h"] += 1
+                tickers_summary[swap["taker_coin"]]["volume_24h"] += swap["taker_amount"]
+                tickers_summary[swap["taker_coin"]]["trades_24h"] += 1
+            if swap["trade_type"] == "sell":
+                tickers_summary[swap["maker_coin"]]["volume_24h"] += swap["taker_amount"]
+                tickers_summary[swap["maker_coin"]]["trades_24h"] += 1
+                tickers_summary[swap["taker_coin"]]["volume_24h"] += swap["maker_amount"]
+                tickers_summary[swap["taker_coin"]]["trades_24h"] += 1
     conn.close()
     return tickers_summary
