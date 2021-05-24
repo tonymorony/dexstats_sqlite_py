@@ -415,7 +415,7 @@ def summary_ticker(path_to_db):
                 tickers_summary[swap["taker_coin"]]["volume_24h"] += swap["maker_amount"]
                 tickers_summary[swap["taker_coin"]]["trades_24h"] += 1
     conn.close()
-    for summary in tickers_summary:
-        if summary == {"volume_24h": 0, "trades_24h": 0}:
+    for summary in list(tickers_summary):
+        if tickers_summary[summary] == {"volume_24h": 0, "trades_24h": 0}:
             tickers_summary.pop(summary)
     return tickers_summary
