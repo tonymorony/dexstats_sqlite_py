@@ -5,6 +5,7 @@ from decimal import Decimal
 from datetime import datetime, timedelta
 from collections import OrderedDict
 
+
 # getting list of pairs with amount of swaps > 0 from db (list of tuples)
 # string -> list (of base, rel tuples)
 def get_availiable_pairs(path_to_db):
@@ -387,3 +388,24 @@ def volume_for_ticker(ticker, path_to_db, days_in_past):
         volumes_dict[d] = overall_volume - previous_volume
         previous_volume = overall_volume
     return volumes_dict
+
+
+def summary_ticker(path_to_db):
+    conn = sqlite3.connect(path_to_db)
+    sql_coursor = conn.cursor()
+    available_pairs = get_availiable_pairs(path_to_db)
+    timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
+    tickers_summary = {}
+    # init summary dict
+    for pair in available_pairs:
+        for ticker in pair:
+            tickers_summary["ticker"] = {"volume_24h": 0, "trades_24h": 0}
+    for pair in available_pairs:
+        swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
+        for swap in swaps_for_pair_24h:
+            tickers_summary[swap["maker_coin"]]["volume_24h"] += swap["maker_amount"]
+            tickers_summary[swap["maker_coin"]]["trades_24h"] += 1
+            tickers_summary[swap["taker_coin"]]["volume_24h"] += swap["taker_amount"]
+            tickers_summary[swap["taker_coin"]]["trades_24h"] += 1
+    conn.close()
+    return tickers_summary
