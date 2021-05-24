@@ -392,6 +392,7 @@ def volume_for_ticker(ticker, path_to_db, days_in_past):
 
 def summary_ticker(path_to_db):
     conn = sqlite3.connect(path_to_db)
+    conn.row_factory = sqlite3.Row
     sql_coursor = conn.cursor()
     available_pairs = get_availiable_pairs(path_to_db)
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
@@ -399,7 +400,7 @@ def summary_ticker(path_to_db):
     # init summary dict
     for pair in available_pairs:
         for ticker in pair:
-            tickers_summary["ticker"] = {"volume_24h": 0, "trades_24h": 0}
+            tickers_summary[ticker] = {"volume_24h": 0, "trades_24h": 0}
     for pair in available_pairs:
         swaps_for_pair_24h = get_swaps_since_timestamp_for_pair(sql_coursor, pair, timestamp_24h_ago)
         for swap in swaps_for_pair_24h:
