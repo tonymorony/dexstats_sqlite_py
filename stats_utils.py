@@ -184,7 +184,12 @@ def summary_for_pair(pair, path_to_db):
     pair_summary["price_change_percent_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["price_change_percent_24h"])
     pair_summary["highest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["highest_price_24h"])
     pair_summary["lowest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["lowest_price_24h"])
-
+    pair_summary["trades_24h"] = len(swaps_for_pair_24h)
+    last_swap_timestamp = 0
+    for swap in swaps_for_pair_24h:
+        if swap["finished_at"] > last_swap_timestamp:
+            last_swap_timestamp = swap["finished_at"]
+    pair_summary["last_swap_timestamp"] = last_swap_timestamp
     conn.close()
     return pair_summary
 
