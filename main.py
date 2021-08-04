@@ -32,15 +32,23 @@ def cache_gecko_data():
     print("saved gecko data to file")
 
 
-@app.get('/api/v1/summary')
-def summary():
+@app.on_event("startup")
+@repeat_every(seconds=30)  # caching data every 30 seconds
+def cache_summary_data():
     available_pairs_summary = get_availiable_pairs(path_to_db)
     summary_data = []
     for pair in available_pairs_summary:
         pair_summary = summary_for_pair(pair, path_to_db)
-        if pair_summary != 0:
-            summary_data.append(pair_summary)
-    return summary_data
+        summary_data.append(pair_summary)
+    with open('summary_cache.json', 'w+') as json_file:
+        json.dump(summary_data, json_file)
+
+
+@app.get('/api/v1/summary')
+def summary():
+    with open('summary_cache.json', 'r') as json_file:
+        summary_cache_data = json.load(json_file)
+        return summary_cache_data
 
 
 @app.get('/api/v1/summary_for_ticker/{ticker_summary}')
