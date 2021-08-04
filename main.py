@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_utils.tasks import repeat_every
 from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair,\
     atomicdex_info, reverse_string_number, get_data_from_gecko, summary_for_ticker, ticker_for_ticker, volume_for_ticker,\
-    swaps24h_for_ticker
+    swaps24h_for_ticker, summary_ticker
 from decimal import Decimal
 
 path_to_db = 'MM2.db'
@@ -37,7 +37,9 @@ def summary():
     available_pairs_summary = get_availiable_pairs(path_to_db)
     summary_data = []
     for pair in available_pairs_summary:
-        summary_data.append(summary_for_pair(pair, path_to_db))
+        pair_summary = summary_for_pair(pair, path_to_db)
+        if pair_summary != 0:
+            summary_data.append(pair_summary)
     return summary_data
 
 
@@ -94,6 +96,11 @@ def fiat_rates():
 @app.get("/api/v1/volumes_ticker/{ticker_vol}/{days_in_past}")
 def volumes_history_ticker(ticker_vol="KMD", days_in_past=1):
     return volume_for_ticker(ticker_vol, path_to_db, int(days_in_past))
+
+
+@app.get('/api/v1/tickers_summary')
+def tickers_summary():
+    return summary_ticker(path_to_db)
 
 
 if __name__ == '__main__':
