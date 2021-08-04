@@ -37,7 +37,9 @@ def summary():
     available_pairs_summary = get_availiable_pairs(path_to_db)
     summary_data = []
     for pair in available_pairs_summary:
-        summary_data.append(summary_for_pair(pair, path_to_db))
+        pair_summary = summary_for_pair(pair, path_to_db)
+        if pair_summary != 0:
+            summary_data.append(pair_summary)
     return summary_data
 
 
