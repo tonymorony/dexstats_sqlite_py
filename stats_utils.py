@@ -118,21 +118,30 @@ def get_and_parse_orderbook(pair):
     if "-ERC20" not in pair[0]:
         pair_erc20_a = (pair[0] + "-ERC20", pair[1])
         pair_erc20_a_orderbok = get_mm2_orderbook_for_pair(pair_erc20_a)
+        # case when there is no such ticker in coins file
+        if next(iter(pair_erc20_a_orderbok)) == "error":
+            pair_erc20_a_orderbok = {"bids" : [], "asks": []}
     else:
         pair_erc20_a_orderbok =  {"bids" : [], "asks": []}
     if "-ERC20" not in pair[1]:
         pair_erc20_b = (pair[0], pair[1] + "-ERC20")
         pair_erc20_b_orderbok = get_mm2_orderbook_for_pair(pair_erc20_b)
+        if next(iter(pair_erc20_b_orderbok)) == "error":
+            pair_erc20_b_orderbok = {"bids" : [], "asks": []}
     else:
         pair_erc20_b_orderbook = {"bids" : [], "asks": []}
     if "-BEP20" not in pair[0]:
         pair_bep20_a = (pair[0] + "-BEP20", pair[1])
         pair_bep20_a_orderbok = get_mm2_orderbook_for_pair(pair_bep20_a)
+        if next(iter(pair_bep20_a_orderbok)) == "error":
+            pair_bep20_a_orderbok = {"bids" : [], "asks": []}
     else:
         pair_bep20_a_orderbok = {"bids" : [], "asks": []}
     if "-BEP20" not in pair[1]:
         pair_bep20_b = (pair[0], pair[1] + "-BEP20")
         pair_bep20_b_orderbok = get_mm2_orderbook_for_pair(pair_bep20_b)
+        if next(iter(pair_bep20_a_orderbok)) == "error":
+            pair_bep20_b_orderbok = {"bids" : [], "asks": []}
     else:
         pair_bep20_b_orderbok = {"bids" : [], "asks": []}
     usual_orderbook = get_mm2_orderbook_for_pair(pair)
