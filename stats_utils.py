@@ -115,7 +115,30 @@ def find_highest_bid(orderbook):
     return highest_bid["price"]
 
 def get_and_parse_orderbook(pair):
-    orderbook = get_mm2_orderbook_for_pair(pair)
+    if "-ERC20" not in pair[0]:
+        pair_erc20_a = (pair[0] + "-ERC20", pair[1])
+        pair_erc20_a_orderbok = get_mm2_orderbook_for_pair(pair_erc20_a)
+    else:
+        pair_erc20_a_orderbok =  {"bids" : [], "asks": []}
+    if "-ERC20" not in pair[1]:
+        pair_erc20_b = (pair[0], pair[1] + "-ERC20")
+        pair_erc20_b_orderbok = get_mm2_orderbook_for_pair(pair_erc20_b)
+    else:
+        pair_erc20_b_orderbook = {"bids" : [], "asks": []}
+    if "-BEP20" not in pair[0]:
+        pair_bep20_a = (pair[0] + "-BEP20", pair[1])
+        pair_bep20_a_orderbok = get_mm2_orderbook_for_pair(pair_bep20_a)
+    else:
+        pair_bep20_a_orderbok = {"bids" : [], "asks": []}
+    if "-BEP20" not in pair[1]:
+        pair_bep20_b = (pair[0], pair[1] + "-BEP20")
+        pair_bep20_b_orderbok = get_mm2_orderbook_for_pair(pair_bep20_b)
+    else:
+        pair_bep20_b_orderbok = {"bids" : [], "asks": []}
+    usual_orderbook = get_mm2_orderbook_for_pair(pair)
+    orderbook = {"bids" : [], "asks": []}
+    orderbook["bids"] = pair_erc20_a_orderbok["bids"] + pair_erc20_b_orderbok["bids"] + pair_bep20_a_orderbok["bids"] + pair_bep20_b_orderbok["bids"]
+    orderbook["asks"] = pair_erc20_a_orderbok["asks"] + pair_erc20_b_orderbok["asks"] + pair_bep20_a_orderbok["asks"] + pair_bep20_b_orderbok["asks"]
     bids_converted_list = []
     asks_converted_list = []
     try:
