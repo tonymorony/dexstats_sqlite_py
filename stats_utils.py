@@ -145,6 +145,8 @@ def get_and_parse_orderbook(pair):
     else:
         pair_bep20_b_orderbook = {"bids" : [], "asks": []}
     usual_orderbook = get_mm2_orderbook_for_pair(pair)
+    if next(iter(usual_orderbook)) == "error":
+        usual_orderbook = {"bids" : [], "asks": []}
     orderbook = {"bids" : [], "asks": []}
     # TODO: make list with orderbooks and iterate for error key and combining
     orderbook["bids"] = usual_orderbook["bids"] + pair_erc20_a_orderbook["bids"] + pair_erc20_b_orderbook["bids"] + pair_bep20_a_orderbook["bids"] + pair_bep20_b_orderbook["bids"]
