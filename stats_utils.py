@@ -116,6 +116,7 @@ def find_highest_bid(orderbook):
 
 def get_and_parse_orderbook(pair):
     if "-ERC20" not in pair[0] and "-ERC20" not in pair[1] and "-BEP20" not in pair[0] and "-BEP20" not in pair[1]:
+        # TODO use combinatorica lib and tokens types list
         pair_erc20_a = (pair[0] + "-ERC20", pair[1])
         pair_erc20_a_orderbook = get_mm2_orderbook_for_pair(pair_erc20_a)
         pair_erc20_b = (pair[0], pair[1] + "-ERC20")
@@ -124,8 +125,16 @@ def get_and_parse_orderbook(pair):
         pair_bep20_a_orderbook = get_mm2_orderbook_for_pair(pair_bep20_a)
         pair_bep20_b = (pair[0], pair[1] + "-BEP20")
         pair_bep20_b_orderbook = get_mm2_orderbook_for_pair(pair_bep20_b)
+        pair_erc20_erc20 = (pair[0] + "-ERC20", pair[1] + "-ERC20")
+        pair_erc20_erc20_orderbook = get_mm2_orderbook_for_pair(pair_erc20_erc20)
+        pair_bep20_bep20 = (pair[0] + "-BEP20", pair[1] + "-BEP20")
+        pair_bep20_bep20_orderbook = get_mm2_orderbook_for_pair(pair_bep20_bep20)
+        pair_bep20_erc20 =  (pair[0] + "-BEP20", pair[1] + "-ERC20")
+        pair_bep20_erc20_orderbook = get_mm2_orderbook_for_pair(pair_bep20_erc20)
+        pair_erc20_bep20 = (pair[0] + "-ERC20", pair[1] + "-BEP20")
+        pair_erc20_bep20_orderbook = get_mm2_orderbook_for_pair(pair_erc20_bep20)
         usual_orderbook = get_mm2_orderbook_for_pair(pair)
-        orderbooks_list = [usual_orderbook, pair_erc20_a_orderbook, pair_erc20_b_orderbook, pair_bep20_a_orderbook, pair_bep20_b_orderbook]
+        orderbooks_list = [usual_orderbook, pair_erc20_a_orderbook, pair_erc20_b_orderbook, pair_bep20_a_orderbook, pair_bep20_b_orderbook, pair_erc20_erc20_orderbook, pair_bep20_bep20_orderbook, pair_bep20_erc20_orderbook, pair_erc20_bep20_orderbook]
         orderbook = {"bids" : [], "asks": []}
         for orderbook_permutation in orderbooks_list:
             # case when there is no such ticker in coins file
