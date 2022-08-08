@@ -59,10 +59,20 @@ def trades(market_pair="KMD_BTC"):
     return trades_data
 
 
+@app.on_event("startup")
+@repeat_every(seconds=600)  # caching data every 10 minutes
+def cache_atomicdex_io():
+    data = atomicdex_info(path_to_db)
+    with open('adex_cache.json', 'w+') as cache_file:
+        json.dump(data, cache_file)
+
+
 @app.get('/api/v1/atomicdexio')
 def atomicdex_info_api():
-    data = atomicdex_info(path_to_db)
-    return data
+    with open('adex_cache.json', 'r') as json_file:
+        adex_cached_data = json.load(json_file)
+        return adex_cached_data
+
 
 if __name__ == '__main__':
     uvicorn.run("main:app", host="0.0.0.0", port=8080)
