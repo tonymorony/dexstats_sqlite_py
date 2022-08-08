@@ -1,7 +1,9 @@
 import uvicorn
+import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info
+from fastapi_utils.tasks import repeat_every
+from stats_utils import get_availiable_pairs, summary_for_pair, ticker_for_pair, orderbook_for_pair, trades_for_pair, atomicdex_info, get_data_from_gecko
 
 path_to_db = '/DB/43ec929fe30ee72be42c9162c56dde910a05e50d/MM2.db'
 app = FastAPI()
@@ -15,6 +17,17 @@ app.add_middleware(
 )
 
 available_pairs = get_availiable_pairs(path_to_db)
+
+@app.on_event("startup")
+@repeat_every(seconds=60)  # caching data every minute
+def cache_gecko_data():
+    gecko_data = get_data_from_gecko()
+    try:
+        with open('gecko_cache.json', 'w') as json_file:
+            json_file.write(json.dumps(gecko_data))
+    except Exception as e:
+        print(e)
+    print("saved gecko data to file")
 
 @app.get('/api/v1/summary')
 def summary():

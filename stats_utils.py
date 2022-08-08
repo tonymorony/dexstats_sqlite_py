@@ -161,6 +161,27 @@ def summary_for_pair(pair, path_to_db):
     pair_summary["highest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["highest_price_24h"])
     pair_summary["lowest_price_24h"] = "{:.10f}".format(pair_24h_volumes_and_prices["lowest_price_24h"])
 
+    # liqudity in USD
+    try:
+        base_liqudity_in_coins = orderbook["total_asks_base_vol"]
+        rel_liqudity_in_coins  = orderbook["total_bids_rel_vol"]
+        with open('gecko_cache.json', 'r') as json_file:
+            gecko_cached_data = json.load(json_file)
+        try:
+            base_liqudity_in_usd = float(gecko_cached_data[pair_summary["base_currency"]]["usd_price"]) \
+                                    * float(base_liqudity_in_coins)
+        except KeyError:
+            base_liqudity_in_usd = 0
+        try:
+            rel_liqudity_in_usd = float(gecko_cached_data[pair_summary["quote_currency"]]["usd_price"]) \
+                                     * float(rel_liqudity_in_coins)
+        except KeyError:
+            rel_liqudity_in_usd = 0
+
+        pair_summary["pair_liqudity_usd"] = base_liqudity_in_usd + rel_liqudity_in_usd
+    except KeyError:
+        pair_summary["pair_liqudity_usd"] = 0
+
     conn.close()
     return pair_summary
 
@@ -216,6 +237,43 @@ def trades_for_pair(pair, path_to_db):
     conn.close()
     return trades_info
 
+
+def get_data_from_gecko():
+    coin_ids_dict = {}
+    with open("0.5.6-coins.json", "r") as coins_json:
+        json_data = json.load(coins_json)
+        for coin in json_data:
+            try:
+                coin_ids_dict[coin] = {}
+                coin_ids_dict[coin]["coingecko_id"] = json_data[coin]["coingecko_id"]
+            except KeyError as e:
+                 print(e)
+                 coin_ids_dict[coin]["coingecko_id"] = "na"
+    coin_ids = ""
+    for coin in coin_ids_dict:
+        coin_id = coin_ids_dict[coin]["coingecko_id"]
+        if coin_id != "na" and coin_id != "test-coin":
+            coin_ids += coin_id
+            coin_ids += ","
+    r = ""
+    try:
+        r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids=' + coin_ids + '&vs_currencies=usd')
+    except Exception as e:
+        return {"error": "https://api.coingecko.com/api/v3/simple/price?ids= is not available"}
+    gecko_data = r.json()
+    try:
+        for coin in coin_ids_dict:
+            coin_id = coin_ids_dict[coin]["coingecko_id"]
+            print(coin_id)
+            if coin_id != "na" and coin_id != "test-coin":
+                coin_ids_dict[coin]["usd_price"] = gecko_data[coin_id]["usd"]
+            else:
+                coin_ids_dict[coin]["usd_price"] = 0
+    except Exception as e:
+        print(e)
+        pass
+    return coin_ids_dict
+
 # Data for atomicdex.io website
 def atomicdex_info(path_to_db):
     timestamp_24h_ago = int((datetime.now() - timedelta(1)).strftime("%s"))
@@ -229,8 +287,20 @@ def atomicdex_info(path_to_db):
     sql_coursor.execute("SELECT * FROM stats_swaps WHERE started_at > ? AND is_success=1;", (timestamp_30d_ago,))
     swaps_30d = len(sql_coursor.fetchall())
     conn.close()
+    available_pairs = get_availiable_pairs(path_to_db)
+    summary_data = []
+    try:
+        for pair in available_pairs:
+            summary_data.append(summary_for_pair(pair, path_to_db))
+        current_liqudity = 0
+        for pair_summary in summary_data:
+            current_liqudity += pair_summary["pair_liqudity_usd"]
+    except Exception as e:
+        print(e)
+    print(current_liqudity)
     return {
         "swaps_all_time" : swaps_all_time,
         "swaps_30d" : swaps_30d,
-        "swaps_24h" : swaps_24h
+        "swaps_24h" : swaps_24h,
+        "current_liqudity" : current_liqudity
     }
