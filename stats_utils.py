@@ -277,7 +277,7 @@ def reverse_string_number(string_number):
 
 def get_data_from_gecko():
     coin_ids_dict = {}
-    with open("0.4.0-coins.json", "r") as coins_json:
+    with open("0.5.7-coins.json", "r") as coins_json:
         json_data = json.load(coins_json)
         for coin in json_data:
             try:
