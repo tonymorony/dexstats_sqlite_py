@@ -300,10 +300,15 @@ def get_data_from_gecko():
     gecko_data = r.json()
     try:
         for coin in coin_ids_dict:
-            coin_id = coin_ids_dict[coin]["coingecko_id"]
-            print(coin_id)
+            try:
+                coin_id = coin_ids_dict[coin]["coingecko_id"]
+            except Exception as e:
+                coin_id = "na"
             if coin_id != "na" and coin_id != "test-coin":
-                coin_ids_dict[coin]["usd_price"] = gecko_data[coin_id]["usd"]
+                try:
+                    coin_ids_dict[coin]["usd_price"] = gecko_data[coin_id]["usd"]
+                except Exception as e:
+                    coin_ids_dict[coin]["usd_price"] = 0
             else:
                 coin_ids_dict[coin]["usd_price"] = 0
     except Exception as e:
